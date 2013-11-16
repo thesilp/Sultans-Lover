@@ -10,18 +10,21 @@ public class PlayerHealthGUI : MonoBehaviour {
 
 	private List<GameObject> heartSprites;
 
-	public Vector3 distanceFromPlayer;
+	public Vector3 distanceFromPlayer = new Vector3(-1.0f, -4.0f, 0.0f);
 
 	// Use this for initialization
 	void Start () {
-		player = (Player)GetComponent("Player");
+		player = transform.parent.gameObject.GetComponent<Player>();
 		heartSprites = new List<GameObject>();
 		this.transform.localPosition = distanceFromPlayer;
+
+		UpdateHearts();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		UpdateHearts();
+//		UpdateHearts();
+		DrawHearts();
 	}
 
 
@@ -29,13 +32,17 @@ public class PlayerHealthGUI : MonoBehaviour {
 		filledHearts = player.currentHealth;
 		emptyHearts = player.maxHealth - player.currentHealth;
 	
-		heartSprites.Clear();
+//		for (int i = 0; i < heartSprites.Count; ++i) {
+//			GameObject.Destroy(heartSprites[i]);
+//		}
+//		heartSprites.Clear();
 
 		for (int i = 0; i < filledHearts; ++i) {
 			GameObject newSpriteGameObject = NewHeart("filled");
 			newSpriteGameObject.name = "Filled Heart";
 			newSpriteGameObject.transform.parent = this.transform;
-			newSpriteGameObject.transform.localScale = new Vector3(0.2f, 0.2f, 0.1f);
+			newSpriteGameObject.transform.localScale = new Vector3(.2f, .2f, 1f);
+			newSpriteGameObject.transform.localPosition = new Vector3(0f, 0f, 0f);
 
 			heartSprites.Add( newSpriteGameObject );
 		}
@@ -43,7 +50,8 @@ public class PlayerHealthGUI : MonoBehaviour {
 			GameObject newSpriteGameObject = NewHeart("empty");
 			newSpriteGameObject.name = "Empty Heart";
 			newSpriteGameObject.transform.parent = this.transform;
-			newSpriteGameObject.transform.localScale = new Vector3(0.2f, 0.2f, 0.1f);
+			newSpriteGameObject.transform.localScale = new Vector3(.2f, .2f, 1f);
+			newSpriteGameObject.transform.localPosition = new Vector3(0f, 0f, 0f);
 
 			heartSprites.Add( newSpriteGameObject );
 		}
@@ -52,8 +60,18 @@ public class PlayerHealthGUI : MonoBehaviour {
 	}
 
 
-	void OnGUI() {
+	void DrawHearts() {
+		for (int i = 0; i < heartSprites.Count; ++i) {
+			GameObject currentSpriteGameObject = heartSprites[i];
+			Sprite currentSprite = ((SpriteRenderer)currentSpriteGameObject.renderer).sprite;
+			Transform parent = this.transform.parent;
 
+			currentSpriteGameObject.transform.localPosition = new Vector3(
+				0.42f*i*currentSprite.bounds.extents.x,
+				0, 
+				0
+			);
+		}
 	}
 
 //	/* Load sprite. */

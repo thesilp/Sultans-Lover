@@ -132,13 +132,13 @@ public class MainLogic : MonoBehaviour {
 			
 			if (!RoundOver()) {
 				// Continue voting process.
-				Debug.Log("Is voting enabled: " + temp.enabled);
-				temp.enabled = true;
+//				Debug.Log("Is voting enabled: " + temp.enabled);
+//				temp.enabled = true;
 				currentEvent.Update();
 			}
 			else {
-				Debug.Log("Is voting enabled: " + temp.enabled);
-				temp.enabled = false;
+//				Debug.Log("Is voting enabled: " + temp.enabled);
+//				temp.enabled = false;
 				currentEvent.Destroy();
 				currentEvent = GetNextEvent();
 				currentEvent.Start();
