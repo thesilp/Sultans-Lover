@@ -3,7 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
+/* 
 
+TTTTTTEEEEEEEEEESSSSSSSSSSTTTTTT!!!!!!!!!!!
+
+ */
 public class MainLogic : MonoBehaviour {
 	
 	[DllImport ("UniWii")]
@@ -93,12 +97,16 @@ public class MainLogic : MonoBehaviour {
 	private GameEvent currentEvent;
 	
 	public Camera mainCamera;
+	public GUIText messageText;
 	
-	private Voting temp;
+	//private Voting temp;
+
+
 	
 	// Use this for initialization
 	void Start () {
 		mainCamera = GameObject.FindWithTag("MainCamera").camera;
+		messageText = GameObject.Find("GUI Text").GetComponent<GUIText>();
 		
 		currentRoundTime = baseRoundTime; 
 		
@@ -112,7 +120,7 @@ public class MainLogic : MonoBehaviour {
 		currentEvent = GetNextEvent();
 		currentEvent.Start();
 		
-		temp = GameObject.Find("MainLogic").GetComponent<Voting>();
+//		temp = GameObject.Find("MainLogic").GetComponent<Voting>();
 	}
 	
 	
@@ -221,7 +229,9 @@ public class MainLogic : MonoBehaviour {
 	
 	
 	public void WriteMessage(string messageToWrite) {
+
 		Debug.Log(messageToWrite);
+		messageText.text = messageToWrite;
 	}
 	
 	
@@ -237,7 +247,7 @@ public class MainLogic : MonoBehaviour {
 		int playerCount = 5;
 		for (int id = 0; id < playerCount; ++id) {
 
-			GameObject newPlayerGameObject = (GameObject)Instantiate(Resources.Load("Players/player_girl1"));
+			GameObject newPlayerGameObject = (GameObject)Instantiate(Resources.Load("Players/player_girl" + (id+1)));
 			newPlayerGameObject.name = "Player " + id;
 
 			Player player = newPlayerGameObject.GetComponent<Player>();
@@ -306,5 +316,10 @@ public class MainLogic : MonoBehaviour {
 		        "\n\tNumDead: " + deadPlayers.Count + 
 		        "\n\tNumTotal: " + allPlayers.Count 
 		        );
+
+		// format text block
+		//GUIStyle boxStyle = "box";
+		//boxStyle.wordWrap = true;
+		//GUI.Box(new Rect(50, 50, 100, 100), "", boxStyle);
 	}
 }
