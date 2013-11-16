@@ -13,12 +13,17 @@ public class GameEvent  {
 
 
 	public virtual void Start() {
-		;
+		Debug.Log("Starting new event: '" + this.GetType().Name + "'");
 	}
 
 
 	public virtual void Update() {
 		;
+	}
+
+
+	public virtual void Destroy() {
+		Debug.Log("Destroying event: '" + this.GetType().Name + "'");
 	}
 
 

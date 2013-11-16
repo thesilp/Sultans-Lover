@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class Player {
 
@@ -7,13 +7,23 @@ public class Player {
 	public int currentHealth;
 
 	public int maxVotes;
+	public int currentVotes;
 	public int wiimoteID;
+
+	public enum PlayerRoles {
+		NONE, 
+		KILLER,
+		HEALER,
+		CAPTAIN
+	}
+
+	public List<PlayerRoles> roles; 
 
 	// Sprite
 
 
-	public void SetMaxHealth(int newMax) {
-		maxHealth = newMax;
+	public void SetCurrentHealth(int newCurrent) {
+		currentHealth = newCurrent;
 	}
 
 
@@ -24,6 +34,11 @@ public class Player {
 
 	public void DecreaseCurrentHealth() {
 		currentHealth = Mathf.Max(currentHealth-1, 0);
+	}
+
+
+	public void SetMaxHealth(int newMax) {
+		maxHealth = newMax;
 	}
 	
 

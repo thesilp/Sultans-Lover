@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Runtime.InteropServices;
 
-public class UniWiiScript : MonoBehaviour {
+public class UniWiiCheck : MonoBehaviour {
 	
 	[DllImport ("UniWii")]
 	private static extern void wiimote_start();

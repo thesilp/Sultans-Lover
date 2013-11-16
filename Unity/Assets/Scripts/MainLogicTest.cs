@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 
-public class MainLogic : MonoBehaviour {
+public class MainLogicTest : MonoBehaviour {
 	
 	[DllImport ("UniWii")]
 	private static extern void wiimote_start();
@@ -70,21 +70,20 @@ public class MainLogic : MonoBehaviour {
 
 	public List<Player> players;
 
-	private float remainingGameTime = 0f;
+	private float currentGameTime = 0f;
 	private float maxGameTime = 200.0f;
 
-	private float baseRoundTime = 20.0f;
+	private float BaseRoundTime = 20.0f;
 	public float currentRoundTime;
-	public float remainingRoundTime;
 
 	private int startMaxHealth = 3;
 	private int startMaxVotes = 1;
 
-	private GameEvent currentEvent;
+
 
 	// Use this for initialization
 	void Start () {
-		currentRoundTime = baseRoundTime; 
+		currentRoundTime = BaseRoundTime; 
 		CreatePlayers();
 	
 	}
@@ -105,25 +104,12 @@ public class MainLogic : MonoBehaviour {
 			}
 		}
 		*/
-		remainingGameTime = Mathf.Max(remainingGameTime-Time.deltaTime, 0.0f);
-		remainingRoundTime = Mathf.Max(remainingRoundTime-Time.deltaTime, 0.0f);
-
-		Debug.Log("remainingGameTime: " + remainingGameTime);
-		Debug.Log("remainingRoundTime: " + remainingRoundTime);
+		currentGameTime += Time.deltaTime;
 
 		if (!GameOver()) {
-
-			if (!RoundOver()) {
-				// Continue voting process.
-				currentEvent.Update();
-			}
-			else {
-				currentEvent.Destroy();
-				currentEvent = GetNextEvent();
-				currentEvent.Start();
-
-				remainingRoundTime = currentRoundTime;
-			}
+			/*
+			 * =)
+			 */ 
 		}
 		else {
 			throw new Exception("Game is over!");
@@ -136,13 +122,7 @@ public class MainLogic : MonoBehaviour {
 
 
 	private bool GameOver() {
-		return remainingGameTime <= 0.0f;
-	}
-
-
-
-	private bool RoundOver() {
-		return remainingRoundTime <= 0.0f;
+		return currentGameTime == maxGameTime;
 	}
 
 
@@ -170,25 +150,6 @@ public class MainLogic : MonoBehaviour {
 			
 		}
 
-	}
-
-
-
-	GameEvent GetNextEvent() {
-
-		string [] possibleEventsNames = {
-			"DecreaseCurrentHealthEvent",
-			"IncreaseCurrentHealthEvent",
-			"IncreaseMaxHealthEvent",
-			"LengthenRoundTimeEvent",
-			"ShortenRoundTimeEvent",
-		};
-
-		int nextEventIndex = UnityEngine.Random.Range(0, possibleEventsNames.Length-1);
-		string nextEventName = possibleEventsNames[nextEventIndex];
-
-		/* Dynamically create instance of a GameEvent from the string name of its type. */
-		return (GameEvent)Activator.CreateInstance(Type.GetType(nextEventName), this);
 	}
 	
 

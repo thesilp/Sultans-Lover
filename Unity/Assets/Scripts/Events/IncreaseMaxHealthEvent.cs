@@ -10,6 +10,8 @@ public class IncreaseMaxHealthEvent : GameEvent {
 
 
 	public override void Start() {
+		base.Start();
+
 		for (int i = 0; i < players.Count; ++i) {
 			players[i].IncreaseMaxHealth();
 		}
