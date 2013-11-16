@@ -250,8 +250,7 @@ public class MainLogic : MonoBehaviour {
 			
 
 			// For debugging, temporarily make the first few players killers depending on the total number of killers allowed for this game
-//			if (id <= remainingKillers) {
-			if (id == 0) {
+			if (id <= remainingKillers) {
 				player.roles.Add(Player.PlayerRoles.KILLER);
 			}
 			
