@@ -109,12 +109,12 @@ public class UniWiiAttributes : MonoBehaviour {
 					cursor_x = Mathf.RoundToInt(temp_x);
 					cursor_y = Mathf.RoundToInt(temp_y);
 				}
+				if (wiimote_getButtonA(i)) {
+					StartCoroutine(Morse());
+				}
 			}
 		}
 		else display = "Press the '1' and '2' buttons on your Wii Remote.";
-
-		wiimote_rumble(0, 1.0f);
-		wiimote_setLed(1);
 	}
 
 	void OnApplicationQuit () {
@@ -137,5 +137,13 @@ public class UniWiiAttributes : MonoBehaviour {
 				GUI.Box ( new Rect (temp_x, temp_y, 64, 64), "Pointer " + i);
 			}
 		}
+	}
+
+	IEnumerator Morse () {
+		wiimote_rumble(0, 0.5f);
+		yield return new WaitForSeconds(1.0f);
+		wiimote_rumble(0, 0.5f);
+		yield return new WaitForSeconds(1.0f);
+		wiimote_rumble(0, 0.5f);
 	}
 }

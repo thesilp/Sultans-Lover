@@ -12,8 +12,8 @@ public class IncreaseCurrentHealthEvent : GameEvent {
 	public override void Start() {
 		base.Start();
 
-		for (int i = 0; i < players.Count; ++i) {
-			players[i].IncreaseCurrentHealth();
+		for (int i = 0; i < alivePlayers.Count; ++i) {
+			alivePlayers[i].IncreaseCurrentHealth();
 		}
 	}
 

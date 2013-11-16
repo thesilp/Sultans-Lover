@@ -4,11 +4,18 @@ using System.Collections.Generic;
 public class GameEvent  {
 
 	protected MainLogic mainLogic;
-	protected List<Player> players;
+
+	protected List<Player> allPlayers;
+	protected List<Player> alivePlayers;
+	protected List<Player> deadPlayers;
+
 
 	public GameEvent(MainLogic mainLogic) {
 		this.mainLogic = mainLogic;
-		players = mainLogic.players;
+
+		allPlayers = mainLogic.allPlayers;
+		alivePlayers = mainLogic.alivePlayers;
+		deadPlayers = mainLogic.deadPlayers;
 	}
 
 

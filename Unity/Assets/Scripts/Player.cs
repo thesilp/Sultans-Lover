@@ -58,6 +58,20 @@ public class Player {
 		maxVotes = newMax;
 	}
 
+
+	public bool IsDead() {
+		return currentHealth == 0f;
+	}
+
+
+	public bool IsKiller() {
+		for (int i = 0; i < roles.Count; ++i) {
+			if (roles[i] == PlayerRoles.KILLER) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
 
 

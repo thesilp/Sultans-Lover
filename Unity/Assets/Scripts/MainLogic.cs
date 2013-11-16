@@ -68,30 +68,43 @@ public class MainLogic : MonoBehaviour {
 	[DllImport ("UniWii")]
 	private static extern bool wiimote_getButtonNunchuckZ(int which);
 
-	public List<Player> players;
+
+	public List<Player> allPlayers;
+	public List<Player> alivePlayers;
+	public List<Player> deadPlayers;
+
 
 	private float remainingGameTime;
 	private float maxGameTime = 200.0f;
 
-	private float baseRoundTime = 20.0f;
-	public float currentRoundTime;
+	private float baseRoundTime = 20.0f; // The base round time. This is used to eventually restore the current round time if events change it.
+	public float currentRoundTime; // What the round time is currently set at. Events can change this.
 	public float remainingRoundTime;
 
 	private int startMaxHealth = 3;
 	private int startMaxVotes = 1;
 
+	private int startMaxKillers = 1;
+	private int remainingKillers;
+
 	private GameEvent currentEvent;
+
+
 
 	// Use this for initialization
 	void Start () {
 		currentRoundTime = baseRoundTime; 
-		CreatePlayers();
-	
+
 		remainingGameTime = maxGameTime;
 		remainingRoundTime = baseRoundTime;
 
+		remainingKillers = startMaxKillers;
+
+		CreatePlayers();
+
 		currentEvent = GetNextEvent();
 		currentEvent.Start();
+
 	}
 
 
@@ -116,6 +129,8 @@ public class MainLogic : MonoBehaviour {
 		Debug.Log("remainingGameTime: " + remainingGameTime);
 		Debug.Log("remainingRoundTime: " + remainingRoundTime);
 
+		UpdatePlayers();
+
 		if (!GameOver()) {
 
 			if (!RoundOver()) {
@@ -135,13 +150,13 @@ public class MainLogic : MonoBehaviour {
 		}
 
 
-
 	}
 
 
 
 	private bool GameOver() {
-		return remainingGameTime <= 0.0f;
+		return (remainingGameTime <= 0.0f) || OnlyKillersRemaining() || NoKillersRemaining();
+	
 	}
 
 
@@ -154,7 +169,9 @@ public class MainLogic : MonoBehaviour {
 
 	private void CreatePlayers() {
 
-		players = new List<Player>();
+		allPlayers = new List<Player>();
+		alivePlayers = new List<Player>();
+		deadPlayers = new List<Player>();
 
 		/* Go through and instantiate a player for each connected Wiimote. */
 		int playerCount = wiimote_count();
@@ -168,11 +185,13 @@ public class MainLogic : MonoBehaviour {
 
 			player.maxVotes = startMaxVotes;
 
-			// Player 0 is temporarily always the killer
-			if (id == 0) {
+			// For debugging, temporarily make the first few players killers depending on the total number of killers allowed for this game
+			if (id <= remainingKillers) {
 				player.roles.Add(Player.PlayerRoles.KILLER);
 			}
-			
+
+			allPlayers.Add(player);
+			alivePlayers.Add(player);
 		}
 
 	}
@@ -181,7 +200,7 @@ public class MainLogic : MonoBehaviour {
 
 	GameEvent GetNextEvent() {
 
-		string [] possibleEventsNames = {
+		string [] possibleEventNames = {
 			"DecreaseCurrentHealthEvent",
 			"IncreaseCurrentHealthEvent",
 			"IncreaseMaxHealthEvent",
@@ -189,8 +208,8 @@ public class MainLogic : MonoBehaviour {
 			"ShortenRoundTimeEvent",
 		};
 
-		int nextEventIndex = UnityEngine.Random.Range(0, possibleEventsNames.Length-1);
-		string nextEventName = possibleEventsNames[nextEventIndex];
+		int nextEventIndex = UnityEngine.Random.Range(0, possibleEventNames.Length-1);
+		string nextEventName = possibleEventNames[nextEventIndex];
 
 		System.Object [] parameters = {this};
 
@@ -198,6 +217,49 @@ public class MainLogic : MonoBehaviour {
 		return (GameEvent)Activator.CreateInstance(Type.GetType(nextEventName), parameters);
 	}
 	
+
+
+	void UpdatePlayers() {
+
+		for (int i = 0; i < alivePlayers.Count; ++i) {
+			Player currentPlayer = alivePlayers[i];
+
+			if (currentPlayer.IsDead()) {
+
+				alivePlayers.Remove(currentPlayer);
+				deadPlayers.Add (currentPlayer);
+
+				/* If you're a killer... */
+				if (currentPlayer.IsKiller()) {
+					--remainingKillers;
+				}
+			}
+
+		}
+
+	}
+
+
+
+	bool NoKillersRemaining() {
+		for (int i = 0; i < alivePlayers.Count; ++i) {
+			if (alivePlayers[i].IsKiller()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+
+
+	bool OnlyKillersRemaining() {
+		for (int i = 0; i < alivePlayers.Count; ++i) {
+			if (!alivePlayers[i].IsKiller()) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 
 }
