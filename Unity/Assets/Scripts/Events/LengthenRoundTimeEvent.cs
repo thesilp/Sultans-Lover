@@ -16,6 +16,8 @@ public class LengthenRoundTimeEvent : GameEvent {
 	public override void Start() {
 		base.Start();
 		mainLogic.currentRoundTime += roundTimeModifier;
+
+		SendMessage("All players woke up earlier! Round time is longer today!");
 	}
 
 

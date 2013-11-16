@@ -15,6 +15,8 @@ public class IncreaseMaxHealthEvent : GameEvent {
 		for (int i = 0; i < alivePlayers.Count; ++i) {
 			alivePlayers[i].IncreaseMaxHealth();
 		}
+
+		SendMessage("All players awakened their inner powers! Everyone's max hearts increased by one!");
 	}
 
 }

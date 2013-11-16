@@ -34,4 +34,9 @@ public class GameEvent  {
 	}
 
 
+	protected void SendMessage(string messageToSend) {
+		mainLogic.WriteMessage(messageToSend);
+	}
+
+
 }

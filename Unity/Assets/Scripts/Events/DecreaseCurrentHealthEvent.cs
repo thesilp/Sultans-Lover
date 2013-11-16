@@ -15,6 +15,8 @@ public class DecreaseCurrentHealthEvent : GameEvent {
 		for (int i = 0; i < alivePlayers.Count; ++i) {
 			alivePlayers[i].DecreaseCurrentHealth();
 		}
+
+		SendMessage("All players fell down the stairs! Everyone's hearts decreased by one!");
 	}
 
 }

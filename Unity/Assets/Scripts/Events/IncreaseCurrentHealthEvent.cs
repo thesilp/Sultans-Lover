@@ -15,6 +15,8 @@ public class IncreaseCurrentHealthEvent : GameEvent {
 		for (int i = 0; i < alivePlayers.Count; ++i) {
 			alivePlayers[i].IncreaseCurrentHealth();
 		}
+
+		SendMessage("All players are feeling rather healthy today! Everyone gets a heart.");
 	}
 
 }

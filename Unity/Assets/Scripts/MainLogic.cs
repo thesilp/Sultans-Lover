@@ -126,8 +126,8 @@ public class MainLogic : MonoBehaviour {
 		remainingGameTime = Mathf.Max(remainingGameTime-Time.deltaTime, 0.0f);
 		remainingRoundTime = Mathf.Max(remainingRoundTime-Time.deltaTime, 0.0f);
 
-		Debug.Log("remainingGameTime: " + remainingGameTime);
-		Debug.Log("remainingRoundTime: " + remainingRoundTime);
+//		Debug.Log("remainingGameTime: " + remainingGameTime);
+//		Debug.Log("remainingRoundTime: " + remainingRoundTime);
 
 		UpdatePlayers();
 
@@ -146,7 +146,16 @@ public class MainLogic : MonoBehaviour {
 			}
 		}
 		else {
-			throw new Exception("Game is over!");
+
+			throw new Exception(
+				"Game is over!" + 
+				"\n\tOnlyKillersRemaining? " + OnlyKillersRemaining() + 
+			    "\n\tNoKillersRemaining? " + NoKillersRemaining() + 
+				"\n\tNumKillersRemaining: " + remainingKillers + 
+				"\n\tNumAlive: " + alivePlayers.Count + 
+				"\n\tNumDead: " + deadPlayers.Count + 
+				"\n\tNumTotal: " + allPlayers.Count 
+			);
 		}
 
 
@@ -163,37 +172,6 @@ public class MainLogic : MonoBehaviour {
 
 	private bool RoundOver() {
 		return remainingRoundTime <= 0.0f;
-	}
-
-
-
-	private void CreatePlayers() {
-
-		allPlayers = new List<Player>();
-		alivePlayers = new List<Player>();
-		deadPlayers = new List<Player>();
-
-		/* Go through and instantiate a player for each connected Wiimote. */
-		int playerCount = wiimote_count();
-		for (int id = 0; id < playerCount; ++id) {
-
-			Player player = new Player();
-			player.wiimoteID = id;
-
-			player.maxHealth = startMaxHealth;
-			player.currentHealth = startMaxHealth;
-
-			player.maxVotes = startMaxVotes;
-
-			// For debugging, temporarily make the first few players killers depending on the total number of killers allowed for this game
-			if (id <= remainingKillers) {
-				player.roles.Add(Player.PlayerRoles.KILLER);
-			}
-
-			allPlayers.Add(player);
-			alivePlayers.Add(player);
-		}
-
 	}
 
 
@@ -216,31 +194,9 @@ public class MainLogic : MonoBehaviour {
 		/* Dynamically create instance of a GameEvent from the string name of its type. */
 		return (GameEvent)Activator.CreateInstance(Type.GetType(nextEventName), parameters);
 	}
+
+
 	
-
-
-	void UpdatePlayers() {
-
-		for (int i = 0; i < alivePlayers.Count; ++i) {
-			Player currentPlayer = alivePlayers[i];
-
-			if (currentPlayer.IsDead()) {
-
-				alivePlayers.Remove(currentPlayer);
-				deadPlayers.Add (currentPlayer);
-
-				/* If you're a killer... */
-				if (currentPlayer.IsKiller()) {
-					--remainingKillers;
-				}
-			}
-
-		}
-
-	}
-
-
-
 	bool NoKillersRemaining() {
 		for (int i = 0; i < alivePlayers.Count; ++i) {
 			if (alivePlayers[i].IsKiller()) {
@@ -262,4 +218,81 @@ public class MainLogic : MonoBehaviour {
 	}
 
 
+
+	public void WriteMessage(string messageToWrite) {
+		Debug.Log(messageToWrite);
+	}
+
+	
+
+	private void CreatePlayers() {
+		
+		allPlayers = new List<Player>();
+		alivePlayers = new List<Player>();
+		deadPlayers = new List<Player>();
+		
+		/* Go through and instantiate a player for each connected Wiimote. */
+		//int playerCount = wiimote_count();
+		int playerCount = 5;
+		for (int id = 0; id < playerCount; ++id) {
+			
+			Player player = new Player();
+			player.wiimoteID = id;
+			
+			player.maxHealth = startMaxHealth;
+			player.currentHealth = startMaxHealth;
+			
+			player.maxVotes = startMaxVotes;
+			
+			// For debugging, temporarily make the first few players killers depending on the total number of killers allowed for this game
+			if (id <= remainingKillers) {
+				player.roles.Add(Player.PlayerRoles.KILLER);
+			}
+			
+			allPlayers.Add(player);
+			alivePlayers.Add(player);
+
+			Debug.Log("alivePlayers.Count: " + alivePlayers.Count);
+		}
+		
+	}
+
+
+
+	void UpdatePlayers() {
+		
+		for (int i = 0; i < alivePlayers.Count; ++i) {
+			Player currentPlayer = alivePlayers[i];
+			
+			if (currentPlayer.IsDead()) {
+				
+				alivePlayers.Remove(currentPlayer);
+				deadPlayers.Add (currentPlayer);
+				
+				/* If you're a killer... */
+				if (currentPlayer.IsKiller()) {
+					--remainingKillers;
+				}
+			}
+			
+		}
+		
+	}
+
+
+
+	void OnGUI () {
+		// Make a background box
+		GUI.Box(new Rect(10,10,200,200), 
+	        "Stats:" + 
+		    "\n\tremainingGameTime " + remainingGameTime +
+		    "\n\tremainingRoundTime? " + remainingRoundTime +
+	        "\n\tOnlyKillersRemaining? " + OnlyKillersRemaining() + 
+	        "\n\tNoKillersRemaining? " + NoKillersRemaining() + 
+	        "\n\tNumKillersRemaining: " + remainingKillers + 
+	        "\n\tNumAlive: " + alivePlayers.Count + 
+	        "\n\tNumDead: " + deadPlayers.Count + 
+	        "\n\tNumTotal: " + allPlayers.Count 
+		);
+	}
 }

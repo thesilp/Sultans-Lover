@@ -17,6 +17,8 @@ public class ShortenRoundTimeEvent : GameEvent {
 		base.Start();
 
 		mainLogic.currentRoundTime -= roundTimeModifier;
+
+		SendMessage("All players woke up late! Round time is shorter today!");
 	}
 
 

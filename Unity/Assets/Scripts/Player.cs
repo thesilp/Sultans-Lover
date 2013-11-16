@@ -22,6 +22,11 @@ public class Player {
 	// Sprite
 
 
+	public Player() {
+		roles = new List<PlayerRoles>();
+	}
+
+
 	public void SetCurrentHealth(int newCurrent) {
 		currentHealth = newCurrent;
 	}
@@ -73,6 +78,7 @@ public class Player {
 		return false;
 	}
 	
+
 
 
 
