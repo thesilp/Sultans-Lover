@@ -89,14 +89,14 @@ public class Voting : MonoBehaviour {
 	void Update () {
 		int c = wiimote_count();
 		for (int i = 0; i < c; i++) {
-			if (ValidCandidate(i)) {
+			if (ValidVoter(i)) {
 				Debug.Log("Candidate " + i + " can vote!");
-				DueProcess();
+				DueProcess(i);
 			}
 		}
 	}
 
-	bool ValidCandidate (int id) {
+	bool ValidVoter (int id) {
 		foreach (KeyValuePair<Player, int> candidate in votes) {
 			if (candidate.Key.wiimoteID == id) {
 				return true;
@@ -106,8 +106,19 @@ public class Voting : MonoBehaviour {
 		return false;
 	}
 
-	void DueProcess () {
+	void DueProcess (int id) {
+		if (wiimote_getButtonUp(id)) {
 
+		}
+		else if (wiimote_getButtonLeft(id)) {
+
+		}
+		else if (wiimote_getButtonDown(id)) {
+
+		}
+		else if (wiimote_getButtonRight(id)) {
+
+		}
 	}
 
 	void Judgement () {

@@ -235,21 +235,21 @@ public class MainLogic : MonoBehaviour {
 		//int playerCount = wiimote_count();
 		int playerCount = 5;
 		for (int id = 0; id < playerCount; ++id) {
-			
-			Player player = new Player();
-			player.gameObject = new GameObject();
-			player.gameObject.name = "Player" + id + " GameObject";
+
+			GameObject newPlayerGameObject = new GameObject();
+			Player player = (Player)newPlayerGameObject.AddComponent("Player");
+			player.gameObject.name = "Player " + id;
 			player.wiimoteID = id;
 			
 			player.maxHealth = startMaxHealth;
 			player.currentHealth = startMaxHealth;
 			
 			player.maxVotes = startMaxVotes;
-			player.spriteName = "girl1";
 
+			/* Load sprite. */
+			player.spriteName = "girl1";
 			SpriteRenderer renderer = (SpriteRenderer)player.gameObject.AddComponent("SpriteRenderer");
 			Sprite newSprite = Resources.Load<Sprite>("Sprites/Characters/" + player.spriteName);
-
 			renderer.sprite = newSprite;
 
 
@@ -263,7 +263,6 @@ public class MainLogic : MonoBehaviour {
 			allPlayers.Add(player);
 			alivePlayers.Add(player);
 
-			Debug.Log("alivePlayers.Count: " + alivePlayers.Count);
 		}
 		
 	}

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class Player {
+public class Player : MonoBehaviour {
 
 	public int maxHealth;
 	public int currentHealth;
@@ -18,9 +18,7 @@ public class Player {
 	}
 
 	public List<PlayerRoles> roles; 
-
 	public string spriteName;
-	public GameObject gameObject;
 
 
 	public Player() {
