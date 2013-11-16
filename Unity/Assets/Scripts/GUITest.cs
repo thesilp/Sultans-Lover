@@ -4,73 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 
-public class MainLogic : MonoBehaviour {
-	
-	[DllImport ("UniWii")]
-	private static extern void wiimote_start();
-	[DllImport ("UniWii")]
-	private static extern void wiimote_stop();
-	
-	[DllImport ("UniWii")]
-	private static extern int wiimote_count();
-	[DllImport ("UniWii")]
-	private static extern bool wiimote_available( int which );
-	[DllImport ("UniWii")]
-	private static extern bool wiimote_isIRenabled( int which );
-	[DllImport ("UniWii")]	
-	private static extern bool wiimote_enableIR( int which );
-	
-	[DllImport ("UniWii")]
-	private static extern void wiimote_rumble( int which, float duration);
-	[DllImport ("UniWii")]
-	private static extern double wiimote_getBatteryLevel( int which );
-	
-	[DllImport ("UniWii")]
-	private static extern byte wiimote_getAccX(int which);
-	[DllImport ("UniWii")]
-	private static extern byte wiimote_getAccY(int which);
-	[DllImport ("UniWii")]
-	private static extern byte wiimote_getAccZ(int which);
-	
-	[DllImport ("UniWii")]
-	private static extern float wiimote_getIrX(int which);
-	[DllImport ("UniWii")]
-	private static extern float wiimote_getIrY(int which);
-	[DllImport ("UniWii")]
-	private static extern float wiimote_getRoll(int which);
-	[DllImport ("UniWii")]
-	private static extern float wiimote_getPitch(int which);
-	[DllImport ("UniWii")]
-	private static extern float wiimote_getYaw(int which);
-	
-	[DllImport ("UniWii")]
-	private static extern bool wiimote_getButtonA(int which);
-	[DllImport ("UniWii")]
-	private static extern bool wiimote_getButtonB(int which);
-	[DllImport ("UniWii")]
-	private static extern bool wiimote_getButtonUp(int which);
-	[DllImport ("UniWii")]
-	private static extern bool wiimote_getButtonLeft(int which);
-	[DllImport ("UniWii")]
-	private static extern bool wiimote_getButtonRight(int which);
-	[DllImport ("UniWii")]
-	private static extern bool wiimote_getButtonDown(int which);
-	[DllImport ("UniWii")]
-	private static extern bool wiimote_getButton1(int which);
-	[DllImport ("UniWii")]
-	private static extern bool wiimote_getButton2(int which);
-	[DllImport ("UniWii")]
-	private static extern bool wiimote_getButtonNunchuckC(int which);
-	[DllImport ("UniWii")]
-	private static extern bool wiimote_getButtonNunchuckZ(int which);
-	[DllImport ("UniWii")]
-	private static extern bool wiimote_getButtonPlus(int which);
-	[DllImport ("UniWii")]
-	private static extern bool wiimote_getButtonMinus(int which);
-	
-	[DllImport ("UniWii")]	
-	private static extern bool wiimote_setLed( int which );
-	
+public class GUITest : MonoBehaviour {
 	
 	public List<Player> allPlayers;
 	public List<Player> alivePlayers;
@@ -93,8 +27,7 @@ public class MainLogic : MonoBehaviour {
 	private GameEvent currentEvent;
 	
 	public Camera mainCamera;
-	
-	private Voting temp;
+
 	
 	// Use this for initialization
 	void Start () {
@@ -111,8 +44,7 @@ public class MainLogic : MonoBehaviour {
 		
 		currentEvent = GetNextEvent();
 		currentEvent.Start();
-		
-		temp = GameObject.Find("MainLogic").GetComponent<Voting>();
+
 	}
 	
 	
@@ -132,13 +64,11 @@ public class MainLogic : MonoBehaviour {
 			
 			if (!RoundOver()) {
 				// Continue voting process.
-				Debug.Log("Is voting enabled: " + temp.enabled);
-				temp.enabled = true;
+			
 				currentEvent.Update();
 			}
 			else {
-				Debug.Log("Is voting enabled: " + temp.enabled);
-				temp.enabled = false;
+
 				currentEvent.Destroy();
 				currentEvent = GetNextEvent();
 				currentEvent.Start();
@@ -178,6 +108,7 @@ public class MainLogic : MonoBehaviour {
 	
 	
 	GameEvent GetNextEvent() {
+
 		
 		string [] possibleEventNames = {
 			"DecreaseCurrentHealthEvent",
@@ -237,21 +168,23 @@ public class MainLogic : MonoBehaviour {
 		int playerCount = 5;
 		for (int id = 0; id < playerCount; ++id) {
 
-			GameObject newPlayerGameObject = (GameObject)Instantiate(Resources.Load("Players/player_girl1"));
+			Debug.Log("id: " + id);
+
+			GameObject newPlayerGameObject = (GameObject)Resources.Load("Players/player_girl1");
 			newPlayerGameObject.name = "Player " + id;
 
 			Player player = newPlayerGameObject.GetComponent<Player>();
-
-			player.wiimoteID = id;			
+			player.wiimoteID = id;
+			
 			player.maxHealth = startMaxHealth;
 			player.currentHealth = startMaxHealth;
 			
 			player.maxVotes = startMaxVotes;
 			
 
+			
 			// For debugging, temporarily make the first few players killers depending on the total number of killers allowed for this game
-//			if (id <= remainingKillers) {
-			if (id == 0) {
+			if (id <= remainingKillers) {
 				player.roles.Add(Player.PlayerRoles.KILLER);
 			}
 			
@@ -261,7 +194,7 @@ public class MainLogic : MonoBehaviour {
 				0.5f*Screen.height, 
 				mainCamera.nearClipPlane
 				)
-				);
+			);
 			player.transform.localScale = new Vector3(0.02f, 0.02f, 1.0f);
 			
 			allPlayers.Add(player);

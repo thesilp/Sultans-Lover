@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+[RequireComponent (typeof (SpriteRenderer))]
 public class Player : MonoBehaviour {
+	
 
 	public int maxHealth;
 	public int currentHealth;
@@ -18,7 +20,6 @@ public class Player : MonoBehaviour {
 	}
 
 	public List<PlayerRoles> roles; 
-	public string spriteName;
 
 
 	public Player() {
