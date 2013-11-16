@@ -70,7 +70,7 @@ public class MainLogic : MonoBehaviour {
 
 	public List<Player> players;
 
-	private float remainingGameTime = 0f;
+	private float remainingGameTime;
 	private float maxGameTime = 200.0f;
 
 	private float baseRoundTime = 20.0f;
@@ -87,6 +87,11 @@ public class MainLogic : MonoBehaviour {
 		currentRoundTime = baseRoundTime; 
 		CreatePlayers();
 	
+		remainingGameTime = maxGameTime;
+		remainingRoundTime = baseRoundTime;
+
+		currentEvent = GetNextEvent();
+		currentEvent.Start();
 	}
 
 
@@ -187,8 +192,10 @@ public class MainLogic : MonoBehaviour {
 		int nextEventIndex = UnityEngine.Random.Range(0, possibleEventsNames.Length-1);
 		string nextEventName = possibleEventsNames[nextEventIndex];
 
+		System.Object [] parameters = {this};
+
 		/* Dynamically create instance of a GameEvent from the string name of its type. */
-		return (GameEvent)Activator.CreateInstance(Type.GetType(nextEventName), this);
+		return (GameEvent)Activator.CreateInstance(Type.GetType(nextEventName), parameters);
 	}
 	
 
