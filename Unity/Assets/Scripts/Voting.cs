@@ -87,13 +87,17 @@ public class Voting : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		int c = wiimote_count();
-		for (int i = 0; i < c; i++) {
-			if (ValidVoter(i)) {
-				Debug.Log("Candidate " + i + " can vote!");
-				DueProcess(i);
+		while (!mainLogic.GetComponent<MainLogic>().RoundOver()) {
+			int c = wiimote_count();
+			for (int i = 0; i < c; i++) {
+				if (ValidVoter(i)) {
+					Debug.Log("Candidate " + i + " can vote!");
+					DueProcess(i);
+				}
 			}
 		}
+
+		Judgement();
 	}
 
 	bool ValidVoter (int id) {
@@ -107,6 +111,7 @@ public class Voting : MonoBehaviour {
 	}
 
 	void DueProcess (int id) {
+
 		if (wiimote_getButtonUp(id)) {
 
 		}
@@ -122,6 +127,11 @@ public class Voting : MonoBehaviour {
 	}
 
 	void Judgement () {
+		int majorityVotes = 0;
+
+		foreach (KeyValuePair<Player, int> candidate in votes) {
+
+		}
 
 	}
 }

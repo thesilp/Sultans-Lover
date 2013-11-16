@@ -89,10 +89,13 @@ public class MainLogic : MonoBehaviour {
 
 	private GameEvent currentEvent;
 
+	public Camera mainCamera;
 
 
 	// Use this for initialization
 	void Start () {
+		mainCamera = GameObject.FindWithTag("MainCamera").camera;
+
 		currentRoundTime = baseRoundTime; 
 
 		remainingGameTime = maxGameTime;
@@ -163,14 +166,14 @@ public class MainLogic : MonoBehaviour {
 
 
 
-	private bool GameOver() {
+	public bool GameOver() {
 		return (remainingGameTime <= 0.0f) || OnlyKillersRemaining() || NoKillersRemaining();
 	
 	}
 
 
 
-	private bool RoundOver() {
+	public bool RoundOver() {
 		return remainingRoundTime <= 0.0f;
 	}
 
@@ -258,7 +261,14 @@ public class MainLogic : MonoBehaviour {
 				player.roles.Add(Player.PlayerRoles.KILLER);
 			}
 
-
+			player.transform.position = mainCamera.ScreenToWorldPoint(
+				new Vector3(
+				((float)id/playerCount)*Screen.width + (Screen.width/(2.0f*playerCount)), 
+					0.5f*Screen.height, 
+					mainCamera.nearClipPlane
+				)
+			);
+			player.transform.localScale = new Vector3(0.02f, 0.02f, 1.0f);
 			
 			allPlayers.Add(player);
 			alivePlayers.Add(player);
