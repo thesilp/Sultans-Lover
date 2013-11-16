@@ -237,17 +237,28 @@ public class MainLogic : MonoBehaviour {
 		for (int id = 0; id < playerCount; ++id) {
 			
 			Player player = new Player();
+			player.gameObject = new GameObject();
+			player.gameObject.name = "Player" + id + " GameObject";
 			player.wiimoteID = id;
 			
 			player.maxHealth = startMaxHealth;
 			player.currentHealth = startMaxHealth;
 			
 			player.maxVotes = startMaxVotes;
-			
+			player.spriteName = "girl1";
+
+			SpriteRenderer renderer = (SpriteRenderer)player.gameObject.AddComponent("SpriteRenderer");
+			Sprite newSprite = Resources.Load<Sprite>("Sprites/Characters/" + player.spriteName);
+
+			renderer.sprite = newSprite;
+
+
 			// For debugging, temporarily make the first few players killers depending on the total number of killers allowed for this game
 			if (id <= remainingKillers) {
 				player.roles.Add(Player.PlayerRoles.KILLER);
 			}
+
+
 			
 			allPlayers.Add(player);
 			alivePlayers.Add(player);

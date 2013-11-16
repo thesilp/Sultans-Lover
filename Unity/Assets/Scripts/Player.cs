@@ -19,7 +19,8 @@ public class Player {
 
 	public List<PlayerRoles> roles; 
 
-	// Sprite
+	public string spriteName;
+	public GameObject gameObject;
 
 
 	public Player() {
